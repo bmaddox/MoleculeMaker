@@ -43,6 +43,17 @@ public class Bond extends MoleculeConnectorComponent {
 		recalculateMiddleXY();
 		setBondOrder(bondOrder);
 	}
+	
+	public Color getColor() {
+		if (bonding)
+			return Color.BLUE; // Never called, I don't think.
+		if (selected)
+			return Color.GREEN;
+		if (dragging)
+			return Color.LIGHT_GRAY;
+
+		return Color.BLACK;
+	}
 
 	public int getBondOrder() {
 		return bondOrder;
