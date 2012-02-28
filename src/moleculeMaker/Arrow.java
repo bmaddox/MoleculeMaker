@@ -4,23 +4,40 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
-
+/**
+ * To heck with arclines!
+ * @author Ian Graham
+ *
+ */
 public class Arrow extends MoleculeConnectorComponent
 {
-	/**
-	 * The element connection of this arrow class. It can be either the starting or ending point.
-	 */
-	private MoleculeComponent e;
-	/**
-	 * The bond connection of this arrow class. It can be either the starting or the ending point;
-	 */
-	private MoleculeComponent b;
-	/**
-	 * The radius of the arcline to be generated. This is found using two measured points and one
-	 * arbitrarily created one.
-	 */
 	
+	/**
+	 * This is the order in which this arrow occurs in the problem. 1 Denotes this is the
+	 * first arrow that needs to be drawn, 2 denotes this is the second, 3 denotes this is
+	 * the third. Supposedly valid input is 2-3 but I don't get that yet so 1 is a default
+	 * value.
+	 */
+	private int problemOrder;
+
 	public Arrow(MoleculeComponent c1, MoleculeComponent c2)
+	{
+		super();
+
+		System.out.println("Bond being created using: " + c1 + " and " + c2);
+
+		if (c1 == null || c2 == null) {
+			System.out.println("Bonder or bondee is null");
+			return;
+		}
+		dragColor = Color.BLUE; // set the drag color for arrow lines
+		setConnectionAttributes(c1, c2);
+		recalculateMiddleXY();
+		problemOrder = 1; //Default to 1. This can be a problem if the default constructor
+						  //is used too much.
+	}
+	
+	public Arrow(MoleculeComponent c1, MoleculeComponent c2, int problemOrder)
 	{
 		super();
 
@@ -34,6 +51,7 @@ public class Arrow extends MoleculeConnectorComponent
 		dragColor = Color.BLUE; // set the drag color for arrow lines
 		setConnectionAttributes(c1, c2);
 		recalculateMiddleXY();
+		setProblemOrder(problemOrder);
 	}
 	
 	public void draw(Graphics g, int offset, int offset_y)
@@ -64,6 +82,21 @@ public class Arrow extends MoleculeConnectorComponent
 			y = tip.y - barbLength * Math.sin(rho);
 			((Graphics2D) g2).draw(new Line2D.Double(tip.x, tip.y, x, y));
 			rho = theta - angle;
+		}
+	}
+
+	public int getProblemOrder() {
+		return problemOrder;
+	}
+
+	public void setProblemOrder(int problemOrder) {
+		if(problemOrder >= 2 && problemOrder <= 3)
+		{
+			this.problemOrder = problemOrder;
+		}
+		else
+		{
+			this.problemOrder = 1; //Default value just like Bond, for now.
 		}
 	}
 }
